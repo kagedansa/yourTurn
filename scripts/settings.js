@@ -16,6 +16,14 @@ const settings = {
         type: Boolean,
         default: false
     },
+    useNPCTokens: {
+        name: 'Use Tokens Instead of Artwork only for NPCs',
+        hint: 'Toggle to use tokens for NPCs only instead of full actor artwork.',
+        scope: 'world',
+        config: true,
+        type: Boolean,
+        default: false
+    },
 };
 
 export class Settings {
@@ -25,6 +33,10 @@ export class Settings {
 
     static getUseTokens() {
         return game.settings.get(modName, 'useTokens');
+    }
+	
+	static getUseNPCTokens() {
+        return game.settings.get(modName, 'useNPCTokens');
     }
 
     static registerSettings() {

@@ -22,7 +22,7 @@ export default class TurnSubscriber {
                 });
                 this.startCounterAtOne = Settings.startCounterAtOne;
                 this.useTokens = Settings.useTokens;
-				this.useNPCTokens = Settings.useNPCTokens;
+		this.useNPCTokens = Settings.useNPCTokens;
             });
         });
     }

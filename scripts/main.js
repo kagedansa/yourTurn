@@ -12,7 +12,7 @@ export default class TurnSubscriber {
     static expectedNext;
     static startCounterAtOne;
     static useTokens;
-	static useNPCTokens;
+    static useNPCTokens;
     static begin() {
         Hooks.on("ready", () => {
             this.waitForGM().then((gm) => {
@@ -47,17 +47,17 @@ export default class TurnSubscriber {
         if (!combat.started) return;
         if (combat.combatant === this.lastCombatant) return;
         this.lastCombatant = combat.combatant;
-		if (Settings.getUseTokens()) {
-			const token = combat?.combatant.token;
-            this.image = token.texture.src;
-            }
+	if (Settings.getUseTokens()) {
+		const token = combat?.combatant.token;
+         	this.image = token.texture.src;
+        }
 		else {
 			const token = combat?.combatant.token;
 			if (Settings.getUseNPCTokens() && token.actor.type == "npc") {
 				this.image = token.texture.src;
 			}
 			else {
-            this.image = combat?.combatant.actor.img;
+           			this.image = combat?.combatant.actor.img;
 			}
         }		   
         let ytName = combat?.combatant.name;
@@ -105,17 +105,17 @@ export default class TurnSubscriber {
         imgHTML.className = "yourTurnImg";
 		if (Settings.getUseTokens()) {
 			const token = combat?.combatant.token;
-	        imgHTML.src = token.texture.src;
-        } else {
+	       		imgHTML.src = token.texture.src;
+      		} else {
 			const token = combat?.combatant.token;
 			if (Settings.getUseNPCTokens() && token.actor.type == "npc") {
 				imgHTML.src = token.texture.src;
-            }
+            		}
 			else {
-            imgHTML.src = expectedNext?.actor.img;
+            			imgHTML.src = expectedNext?.actor.img;
 			}
 		}
-		    if (this.currentImgID === null) {
+	    if (this.currentImgID === null) {
             this.currentImgID = `yourTurnImg${this.imgCount - 1}`;
             const currentImgHTML = document.createElement("img");
             currentImgHTML.id = this.currentImgID;
@@ -198,29 +198,29 @@ export default class TurnSubscriber {
 			const rv = `<div class="yourTurnSubheading last">${game.i18n.localize(
 			"YOUR-TURN.NextUp"
 			)}:  <img class="${imgClass}" src="${token.texture.src}"></img>${name}</div>`;
-            console.log(rv);
-            return rv;
-            }
+         		console.log(rv);
+         		return rv;
+           		}
 			else {
 				const token = combatant.token;
 				if (Settings.getUseNPCTokens() && token.actor.type == "npc") {
-				const rv = `<div class="yourTurnSubheading last">${game.i18n.localize(
-				"YOUR-TURN.NextUp"
-				)}:  <img class="${imgClass}" src="${token.texture.src}"></img>${name}</div>`;
-				console.log(rv);
-				return rv;
+					const rv = `<div class="yourTurnSubheading last">${game.i18n.localize(
+					"YOUR-TURN.NextUp"
+					)}:  <img class="${imgClass}" src="${token.texture.src}"></img>${name}</div>`;
+					console.log(rv);
+					return rv;
 				} 
 				else {
-				 const rv = `<div class="yourTurnSubheading last">${game.i18n.localize(
-				"YOUR-TURN.NextUp"
-				)}:  <img class="${imgClass}" src="${combatant.actor.img}"></img>${name}</div>`;
-				console.log(rv);
-				return rv;
+					 const rv = `<div class="yourTurnSubheading last">${game.i18n.localize(
+					"YOUR-TURN.NextUp"
+					)}:  <img class="${imgClass}" src="${combatant.actor.img}"></img>${name}</div>`;
+					console.log(rv);
+					return rv;
 				} 
 			}
 		}
 		else {
-        return null;
+       		return null;
 		}
     }
 	

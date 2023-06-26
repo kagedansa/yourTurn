@@ -12,6 +12,7 @@ export default class TurnSubscriber {
     static expectedNext;
     static startCounterAtOne;
     static useTokens;
+	static useNPCTokens;
     static begin() {
         Hooks.on("ready", () => {
             this.waitForGM().then((gm) => {
@@ -21,6 +22,7 @@ export default class TurnSubscriber {
                 });
                 this.startCounterAtOne = Settings.startCounterAtOne;
                 this.useTokens = Settings.useTokens;
+				this.useNPCTokens = Settings.useNPCTokens;
             });
         });
     }
@@ -40,18 +42,24 @@ export default class TurnSubscriber {
             });
         }
     }
-    static getTokenImage(token) {
-        const scale = token.getFlag("core", "tokenHUD.scale") || 1;
-        const img = token.data.img;
-        const size = Math.ceil(canvas.dimensions.size * scale);
-        return `<img src="${img}" width="${size}" height="${size}" />`;
-    }
     static _onUpdateCombat(combat, update, options, userId) {
         if (!update["turn"] && !update["round"]) return;
         if (!combat.started) return;
         if (combat.combatant === this.lastCombatant) return;
         this.lastCombatant = combat.combatant;
-        this.image = combat?.combatant.actor.img;
+		if (Settings.getUseTokens()) {
+			const token = combat?.combatant.token;
+            this.image = token.texture.src;
+            }
+		else {
+			const token = combat?.combatant.token;
+			if (Settings.getUseNPCTokens() && token.actor.type == "npc") {
+				this.image = token.texture.src;
+			}
+			else {
+            this.image = combat?.combatant.actor.img;
+			}
+        }		   
         let ytName = combat?.combatant.name;
         let ytText = "";
         const ytImgClass = ["adding"];
@@ -66,7 +74,8 @@ export default class TurnSubscriber {
             ytText = game.i18n.localize("YOUR-TURN.SomethingHappens");
             ytImgClass.push("silhoutte");
         } else {
-            ytText = `${ytName}'s ${game.i18n.localize("YOUR-TURN.Turn")}!`;
+			ytText = `${ytName} ist am Zug!`;
+            //ytText = `${ytName}'s ${game.i18n.localize("YOUR-TURN.Turn")}!`;
         }
         const nextCombatant = this.getNextCombatant(combat);
         const expectedNext = combat?.nextCombatant;
@@ -94,15 +103,25 @@ export default class TurnSubscriber {
         const imgHTML = document.createElement("img");
         imgHTML.id = this.nextImgID;
         imgHTML.className = "yourTurnImg";
-        imgHTML.src = expectedNext?.actor.img;
-        if (this.currentImgID === null) {
+		if (Settings.getUseTokens()) {
+			const token = combat?.combatant.token;
+	        imgHTML.src = token.texture.src;
+        } else {
+			const token = combat?.combatant.token;
+			if (Settings.getUseNPCTokens() && token.actor.type == "npc") {
+				imgHTML.src = token.texture.src;
+            }
+			else {
+            imgHTML.src = expectedNext?.actor.img;
+			}
+		}
+		    if (this.currentImgID === null) {
             this.currentImgID = `yourTurnImg${this.imgCount - 1}`;
             const currentImgHTML = document.createElement("img");
             currentImgHTML.id = this.currentImgID;
             currentImgHTML.className = "yourTurnImg";
             currentImgHTML.src = this.image;
             container.append(currentImgHTML);
-            console.log(imgHTML);
         }
         const bannerDiv = document.createElement("div");
         const turnNumber = Settings.getStartCounterAtOne() ? combat.turn + 1 : combat.turn;
@@ -133,15 +152,6 @@ export default class TurnSubscriber {
         this.myTimer = setInterval(() => {
             this.unloadImage();
         }, 5000);
-        let imageHTML;
-        if (Settings.getUseTokens()) {
-            const token = combat?.combatant.token;
-            if (token) {
-                imageHTML = this.getTokenImage(token);
-            }
-        } else {
-            imageHTML = `<img src="${expectedNext?.actor.img}" />`;
-        }
     }
     static loadNextImage(combat) {
         const nextTurn = combat.turn + 1;
@@ -183,15 +193,37 @@ export default class TurnSubscriber {
             }
         }
         if (displayNext) {
-            const rv = `<div class="yourTurnSubheading last">${game.i18n.localize(
-        "YOUR-TURN.NextUp"
-      )}:  <img class="${imgClass}" src="${combatant.actor.img}"></img>${name}</div>`;
+			if (Settings.getUseTokens()) {
+			const token = combatant.token;
+			const rv = `<div class="yourTurnSubheading last">${game.i18n.localize(
+			"YOUR-TURN.NextUp"
+			)}:  <img class="${imgClass}" src="${token.texture.src}"></img>${name}</div>`;
             console.log(rv);
             return rv;
-        } else {
-            return null;
-        }
+            }
+			else {
+				const token = combatant.token;
+				if (Settings.getUseNPCTokens() && token.actor.type == "npc") {
+				const rv = `<div class="yourTurnSubheading last">${game.i18n.localize(
+				"YOUR-TURN.NextUp"
+				)}:  <img class="${imgClass}" src="${token.texture.src}"></img>${name}</div>`;
+				console.log(rv);
+				return rv;
+				} 
+				else {
+				 const rv = `<div class="yourTurnSubheading last">${game.i18n.localize(
+				"YOUR-TURN.NextUp"
+				)}:  <img class="${imgClass}" src="${combatant.actor.img}"></img>${name}</div>`;
+				console.log(rv);
+				return rv;
+				} 
+			}
+		}
+		else {
+        return null;
+		}
     }
+	
     static checkAndDelete(elementID) {
         const prevImg = document.getElementById(elementID);
         if (prevImg !== null) {

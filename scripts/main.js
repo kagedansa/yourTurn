@@ -74,8 +74,8 @@ export default class TurnSubscriber {
             ytText = game.i18n.localize("YOUR-TURN.SomethingHappens");
             ytImgClass.push("silhoutte");
         } else {
-			ytText = `${ytName} ist am Zug!`;
-            //ytText = `${ytName}'s ${game.i18n.localize("YOUR-TURN.Turn")}!`;
+	    //ytText = `${ytName} ist am Zug!`;
+            ytText = `${ytName}'s ${game.i18n.localize("YOUR-TURN.Turn")}!`;
         }
         const nextCombatant = this.getNextCombatant(combat);
         const expectedNext = combat?.nextCombatant;

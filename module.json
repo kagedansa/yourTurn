@@ -2,7 +2,7 @@
     "id": "your-turn",
     "title": "Your Turn!",
     "description": "Your Turn! is a module that adds a visual display whenever the turn changes.",
-    "version": "1.2.2.1",
+    "version": "1.2.3.1",
     "compatibility": {
         "minimum": "10",
         "verified": 11.299,
@@ -13,10 +13,10 @@
             "name": "Autmor"
         },
         {
-            "name": "NotoriusNeo"
+            "name": "EndlessFractal"
         },
         {
-	    "name": "kagedansa"
+            "name": "kagedansa"
       	}
     ],
     "esmodules": [
@@ -42,7 +42,7 @@
             "path": "lang/fr.json"
         }
     ],
-    "url": "https://github.com/NotoriusNeo/yourTurn",
-    "download": "https://github.com/NotoriusNeo/yourTurn/releases/download/1.2.2/module.zip",
-    "manifest": "https://github.com/NotoriusNeo/yourTurn/releases/latest/download/module.json"
+    "url": "https://github.com/EndlessFractal/yourTurn",
+    "download": "https://github.com/EndlessFractal/yourTurn/releases/download/latest/module.zip",
+    "manifest": "https://github.com/EndlessFractal/yourTurn/releases/download/latest/module.json"
 }
